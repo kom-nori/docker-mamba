@@ -1,0 +1,67 @@
+// .devcontainer/devcontainer.json
+{
+  "name": "ubuntu-python-mamba",
+  "build": { "dockerfile": "Dockerfile" }, // FIX: パスが同じ階層なら相対でOK
+  "init": true,
+
+  // FIX: ${localWorkspaceFolderBasename} で他 PC でも動く
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  "forwardPorts": [3000],
+
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      // ---------- Settings ----------
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/conda/bin/python",
+        "python.condaPath": "/opt/conda/bin/mamba",
+        "[python]": {
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+          },
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        }
+      },
+      // ---------- Extensions ----------
+      "extensions": [
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "ms-python.black-formatter",
+        "KevinRose.vsc-python-indent",
+        "njpwerner.autodocstring",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "ms-python.debugpy",
+        "ms-python.vscode-pylance",
+
+        // ✅ フロントエンド開発向け（以下を追加）
+        "dbaeumer.vscode-eslint", // ESLint の統合
+        "esbenp.prettier-vscode", // Prettier フォーマッタ
+        "dsznajder.eslint-plugin-jsx-a11y", // JSX アクセシビリティ
+        "formulahendry.auto-close-tag", // 自動タグ補完
+        "formulahendry.auto-rename-tag", // タグ自動リネーム
+        "christian-kohler.path-intellisense", // ファイルパス補完
+        "bradlc.vscode-tailwindcss", // TailwindCSS 支援（使うなら）
+        "yoavbls.pretty-ts-errors", // TypeScriptエラーをわかりやすく
+        "styled-components.vscode-styled-components", // styled-components 支援（任意）
+        "xabikos.JavaScriptSnippets", // React/JS スニペット
+        "ms-vscode.vscode-typescript-next", // 最新TypeScript LSP（任意）
+        "ritwickdey.liveserver"
+      ]
+    }
+  },
+
+  // FIX: 相対パス化 & bash 呼び出し
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "envFile": "src/.env",
+
+  "remoteUser": "vscode"
+}
